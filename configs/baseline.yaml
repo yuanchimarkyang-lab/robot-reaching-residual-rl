@@ -1,0 +1,12 @@
+kp_values:
+  - 1.0
+  - 2.0
+  - 5.0
+  - 10.0
+  - 20.0
+
+best_kp: 20.0
+num_eval_episodes: 100
+success_threshold: 0.005
+record_video: true
+
