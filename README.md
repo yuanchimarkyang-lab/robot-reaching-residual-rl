@@ -62,15 +62,16 @@ Currently, $\alpha=0.3$ is selected, and the residual SAC is trained in a simila
 | success critetia | $\|d\| < 0.005 \text{ m} = 5 \text{ mm}$ |
 | reward | $-\sum_{i=1}^N \|d_i\|^2$ |
 
-where 
-* $d = $ achieved_goal - target_goal, the distance between the end effector and the target position.
+where $d = $ achieved_goal - target_goal, the distance between the end effector and the target position.
+
+**Note:**
 * The success criteria is 10 times stricker than the default (0.05 m). Such success criteria might render the default reward function ( $\propto d$ ) ineffective because the differences would be too small close to the success, affecting learning efficiency 
 
 
 
 
  
-## Result
+## Results
 ### Without Perturbation
 | Policy | Success Rate | Mean Episode Return | Final Distance (m) |
 | :--- | :---: | :---: | :---: |
@@ -80,30 +81,54 @@ where
 | Residual SAC |  90% | -0.331 $\pm$ 0.298 | 0.0031 $\pm$ 0.0052 |
 
 #### Random Rollout
-The random rollout, unsurprisingly, results in 0% success rate and large mean episode return and final distance. This shows that this task requires a carefully designed policy and can not be achieved purely by luck.
+The random rollout, unsurprisingly, results in $0\%$ success rate, large mean episode return, and large final distance. This shows that this task requires a carefully designed policy and can not be achieved purely by luck.
 
 
 #### Proportional Controller
-The proportional controller exhibit a strong baseline, with final distance below the success criteria (5 mm). 
+The proportional controller exhibit a strong baseline, with final distance below the success criteria ($5$ mm). 
 However, the 10% unsuccess rate and large deviation in the mean episode return and final distance indicates that there are cases that it can not resolve. 
 
-In fact, error analysis on one episode shows that the gap in the 3rd direction can not be overcome by simply calling for actions in the 3rd direction and is directly related to the imperfect control. This suggests that a learned policy on the imperfection might be able to further improve the performance. 
+##### Kp ablation
+| Kp | Success Rate | Mean Episode Return | Final Distance (m) |
+| :--- | :---: | :---: | :---: |
+| 1.0 | 0% | -3.389 $\pm$ 1.099 | 0.0268 $\pm$ 0.0087 |
+| 2.0 |  47% | -1.975 $\pm$ 0.668 | 0.0054 $\pm$ 0.0057 |
+| 5.0 |  90% | -0.798 $\pm$ 0.371 | 0.0025 $\pm$ 0.0057 |
+| 10.0 |  90% | -0.399 $\pm$ 0.317 | 0.0021 $\pm$ 0.0057 |
+| 20.0 |  90% | -0.277 $\pm$ 0.318 | 0.0018 $\pm$ 0.0056 |
+
+Since Kp controls the magnitude of the displacement, that reason that Kp $=1.0$ and Kp $=2.0$ fail to achieve high success rate may simple be the movement each time step is too small to arrive at the target at given limited step (50).
+The success rate is saturated at Kp $=5.0$ but the mean episode return is still improved from Kp $=5.0$ to Kp $=20.0$, probably from the cases where the proportional control can perform well.
+The failed cases are likely to limit the mean episode return as well as the standard deviation.
+
+
+##### Error Analysis
+<center><img src="./results/metrics/baseline/error_analysis_20.png" alt="Observation Noise" width="450" style="margin:6px 0 0 0;"></center>
+
+The error analysis based on the 100 evaluation episodes on the case of Kp $=20.0$ shows that the 10 failled cases all have z-direction displacement that can not be overcome.
+In fact, the displacement at the x/y direction has been reduced below threshold early on in the episode (less than 10 steps).
+After that, the robot is trying to reduce the gap at the z-direction by repeatedly applying action in z-direction but unsuccessfully. 
+This suggests that the simple, proportional controller can not resolve the cases when there is mismatch between applied action and the real displacement, and calls in two question:
+* Is such error intrinsic to this robot design? That is, could the end effector really be moved to that spot?
+* How to learn it?
 
 #### SAC
 The SAC model seems to exhibit a strong performance, with sucess rate, mean episode return, and the final distance approaching those of the proportional controller.
 This suggests that SAC might have learned that actions similar to that of the proportional controller. 
 
-However, since the hard cases only take about 10%, the SAC model seems to learn the majority, easy cases while the scarce, hard cases left unlearned.
+However, since the hard cases only take about 10%, the SAC model seems to learn the majority, easy cases while the scarce, hard cases left unlearned, thus the success rate seemingly saturated at 90%.
 
 #### Residual SAC
 The Residual SAC is designed to learn the residual action that the SAC model to perform to compensate what the proportional controller can not do, i.e., to overcome the imperfect control.
-However, the results show that the residual SAC likely also learn how the proportional controller perform as well. 
+However, the results show that the residual SAC likely also learn how the proportional controller perform as well, defeating its design purpose. 
 
-A new design is required. 
+***Therefore, a new design is required.***
 
 
 ### With Perturbation
-The perturbation includes three parts: observation noise, action noise, and action level. For observation noise and action noise, we added Gaussian noise on observation or action to evaluate how it would impact the success rate. For action level, we apply a scaling factor to the action to evaluate if the policy is still robust under low-power. 
+The perturbation includes three parts: observation noise, action noise, and action level. 
+For observation noise and action noise, Gaussian noise is added on observation or action to evaluate how such noise would impact the success rate. 
+For action level, we apply a scaling factor to the action to evaluate if the policy is still robust under low-power. 
 
 #### Observation Noise
 <div style="background: #eeeff0; border:1px solid #a9aaac; border-radius:0px; padding:2px 16px; font-family:monospace;white-space:pre-wrap;line-height:1.0;">
@@ -136,12 +161,11 @@ Over all, the proportional controller, SAC, and residual SAC are robust against 
 
 ## Discussion
 The cause of the remaining 10% error may includes
-* **Mechanical limitation**: the robot arm is not able to reach such target. This might be validated manually on the simulator.
+* **Mechanical limitation**: the robot arm is not able to reach such target. This could be validated manually on the simulator and will be my next step.
 * **Policy Design**: the SAC model does not have enough data for the hard case thus it does not learn. This might be resolved using
     1. a carefully designed loss function to emphasize the fine, final distance such as $\sim \log(d)$. 
     2. a carefully designed scheme to learn the correction on top of the proportional controller, instead of learning from the proportional controller.
 
-## Next
 
 
 [^1]: The action in FetchReachDense-v4 is interpreted as a Cartesian control command rather than a direct state displacement. Therefore, the realized end-effector motion does not exactly equal the scaled action. This makes the proportional controller a useful but imperfect baseline, motivating residual learning as a way to correct the controller under the simulator dynamics.
