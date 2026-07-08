@@ -1,0 +1,25 @@
+total_timesteps: 200000
+
+learning_rate: 0.0003
+buffer_size: 100000
+batch_size: 256
+learning_starts: 1000
+ent_coef: auto_0.01
+target_entropy: -0.5
+gamma: 0.95
+tau: 0.005
+train_freq: 1
+gradient_steps: 1
+
+eval_freq: 5000
+n_eval_episodes: 100
+
+num_final_eval_episodes: 100
+success_threshold: 0.005
+
+residual_alpha: 0.3
+
+model_name: final_model #residual_sac_fetch_reach_dense_v4
+
+evaluation_model_label: 0.3_auto_0.01_-0.5_200000_20260702-164103
+
