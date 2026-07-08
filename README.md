@@ -62,12 +62,14 @@ Currently, $\alpha=0.3$ is selected, and the residual SAC is trained in a simila
 | success critetia | $\|d\| < 0.005 \text{ m} = 5 \text{ mm}$ |
 | reward | $-\sum_{i=1}^N \|d_i\|^2$ |
 
-where $d = $ achieved_goal - target_goal, *the distance between the end effector and the target position*.
-
-#### Note
-* The action in FetchReachDense-v4 is interpreted as a Cartesian control command rather than a direct state displacement. Therefore, the realized end-effector motion does not exactly equal the scaled action. This makes the proportional controller a useful but imperfect baseline, motivating residual learning as a way to correct the controller under the simulator dynamics.
+where 
+* $d = $ achieved_goal - target_goal, the distance between the end effector and the target position.
 * The success criteria is 10 times stricker than the default (0.05 m). Such success criteria might render the default reward function ( $\propto d$ ) ineffective because the differences would be too small close to the success, affecting learning efficiency 
 
+
+
+
+ 
 ## Result
 ### Without Perturbation
 | Policy | Success Rate | Mean Episode Return | Final Distance (m) |
