@@ -8,7 +8,7 @@ This motivates the adoption of reinforcement learning on robot control, even in 
 
 In this project, I focus on a simple task as an example,  `FetchReachDense-v4` from Gymnasium-Robotics. In this task, a simulated Fetch robot arm needs to move its end-effector to a target location. Policies designed and compared first in a noiseless environment; noise is included later in robustness test. 
 
-Currently, a random rollout, a proportional controller, and a SAC-based model, and a residual-SAC based on proportional controller have been implemented and benchmarked.
+Currently, a random rollout, a proportional controller, a SAC-based model, and a residual-SAC based on proportional controller have been implemented and benchmarked.
 
 ## Method
 ### Summary of Policies
@@ -103,7 +103,7 @@ The failed cases are likely to limit the mean episode return as well as the stan
 
 
 ##### Error Analysis
-<center><img src="./results/metrics/baseline/error_analysis_20.png" alt="Observation Noise" width="450" style="margin:6px 0 0 0;"></center>
+<center><img src="./results/metrics/baseline/error_analysis_20.png" alt="Error Analysis" width="450" style="margin:6px 0 0 0;"></center>
 
 The error analysis based on the 100 evaluation episodes on the case of Kp $=20.0$ shows that the 10 failled cases all have z-direction displacement that can not be overcome.
 In fact, the displacement at the x/y direction has been reduced below threshold early on in the episode (less than 10 steps).
@@ -165,6 +165,150 @@ The cause of the remaining 10% error may includes
 * **Policy Design**: the SAC model does not have enough data for the hard case thus it does not learn. This might be resolved using
     1. a carefully designed loss function to emphasize the fine, final distance such as $\sim \log(d)$. 
     2. a carefully designed scheme to learn the correction on top of the proportional controller, instead of learning from the proportional controller.
+
+
+## Installation
+
+This project was developed with Python 3.12 and uses Gymnasium-Robotics, MuJoCo, Stable-Baselines3, NumPy, Pandas, and Matplotlib.
+
+Clone the repository:
+
+```bash
+git clone https://github.com/YOUR_USERNAME/robot-reaching-residual-rl.git
+cd robot-reaching-residual-rl
+```
+
+Create and activate a virtual environment:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+```
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+The main environment used in this project is:
+
+```text
+FetchReachDense-v4
+```
+
+from Gymnasium-Robotics.
+
+## Usage
+
+First, verify that the MuJoCo/Gymnasium-Robotics environment works correctly:
+
+```bash
+python src/check_env.py
+```
+
+Run a random-policy rollout:
+
+```bash
+python src/random_rollout.py
+```
+
+Evaluate the proportional controller baseline:
+
+```bash
+python src/evaluate_baseline.py
+```
+
+Train the SAC policy:
+
+```bash
+python src/train_sac.py
+```
+
+Evaluate the trained SAC policy:
+
+```bash
+python src/evaluate_sac.py
+```
+
+Train the residual SAC policy:
+
+```bash
+python src/train_residual_sac.py
+```
+
+Evaluate the residual SAC policy:
+
+```bash
+python src/evaluate_residual_sac.py
+```
+
+Run robustness evaluations under observation noise, action noise, and action scaling:
+
+```bash
+python src/evaluate_robustness.py
+```
+
+<!--
+Generate plots: 
+
+```bash
+python src/plot_day5.py
+```
+-->
+
+The trained models are saved under `models/`, while evaluation metrics and plots are saved under `results/`.
+
+## Repository Structure
+
+```text
+robot-reaching-residual-rl/
+├── configs/
+│   ├── env.yaml
+│   ├── baseline.yaml
+│   ├── sac.yaml
+│   ├── residual_sac.yaml
+│   └── robustness.yaml
+│
+├── src/
+│   ├── check_env.py
+│   ├── config.py
+│   ├── controllers.py
+│   ├── env_utils.py
+│   ├── wrappers.py
+│   ├── random_rollout.py
+│   ├── evaluate_baseline.py
+│   ├── train_sac.py
+│   ├── evaluate_sac.py
+│   ├── train_residual_sac.py
+│   ├── evaluate_residual_sac.py
+│   ├── evaluate_robustness.py
+│
+├── results/
+│   ├── metrics/
+│   └── plots/
+│
+├── models/
+│   ├── sac/
+│   └── residual_sac/
+│
+├── README.md
+├── requirements.txt
+└── .gitignore
+```
+
+### Directory Descriptions
+
+| Directory / File   | Description                                                                                                       |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------- |
+| `configs/`         | YAML configuration files for environment setup, controllers, RL training, residual RL, and robustness experiments |
+| `src/`             | Source code for controllers, wrappers, training scripts, evaluation scripts, and plotting utilities               |
+| `results/metrics/` | Evaluation results saved as CSV files                                                                             |
+| `results/plots/`   | Figures used in the README and analysis                                                                           |
+| `models/`          | Trained SAC and residual SAC models; usually excluded from Git tracking if model files are large                  |
+| `README.md`        | Project description, methodology, results, discussion, and usage guide                                            |
+| `requirements.txt` | Python package dependencies                                                                                       |
+| `.gitignore`       | Files and folders excluded from Git tracking                                                                      |
 
 
 
