@@ -103,7 +103,7 @@ The failed cases are likely to limit the mean episode return as well as the stan
 
 
 ##### Error Analysis
-<center><img src="./results/metrics/baseline/error_analysis_20.png" alt="Error Analysis" width="450" style="margin:6px 0 0 0;"></center>
+<center><img src="./results/plots/baseline/error_analysis_20.png" alt="Error Analysis" width="450" style="margin:6px 0 0 0;"></center>
 
 The error analysis based on the 100 evaluation episodes on the case of Kp $=20.0$ shows that the 10 failled cases all have z-direction displacement that can not be overcome.
 In fact, the displacement at the x/y direction has been reduced below threshold early on in the episode (less than 10 steps).
@@ -134,7 +134,8 @@ For action level, we apply a scaling factor to the action to evaluate if the pol
 <div style="background: #eeeff0; border:1px solid #a9aaac; border-radius:0px; padding:2px 16px; font-family:monospace;white-space:pre-wrap;line-height:1.0;">
 
 $\tilde {s}_t = s_t + \epsilon_t$, where $\tilde {s}_t$ is the noisy observation, $s_t$ is the true observation (state), and $\epsilon_t$ is noise. </div>
-<center><img src="./results/metrics/robustness/observation_noise.png" alt="Observation Noise" width="300" style="margin:6px 0 0 0;"></center>
+<center><img src="./results/plots/robustness/observation_noise.png" alt="Observation Noise" width="300" style="margin:6px 0 0 0;"></center>
+![Observation Noise](./results/plots/robustness/observation_noise.png)
 
 First of all, with an observation noise higher than success threshold ($\sigma \ge 0.005 \text{ m}$), the success rates for all policies drop drastically, indicating that achieving accurate control requires low noise level.
 In the regine where the observation noise is about the same size of the sucess threshold the baseline policy ($\sigma = 0.005, 0.01 \text{ m}$), proportional controller seems to be more robust against the observation noise, comparing to SAC and residual SAC. 
@@ -145,7 +146,7 @@ On the other hand, the simplicity of proportional controller seems to make it mo
 <div style="background: #eeeff0; border:1px solid #a9aaac; border-radius:0px; padding:2px 16px; font-family:monospace;white-space:pre-wrap;line-height:1.0;">
 
 $\tilde {a}_t = a_t + \epsilon_t$, where $\tilde {a}_t$ is the noisy action, $a_t$ is the action proposed by the policy, and $\epsilon_t$ is noise. </div>
-<center><img src="./results/metrics/robustness/action_noise.png" alt="Action Noise" width="300" style="margin:6px 0 0 0;"></center>
+<center><img src="./results/plots/robustness/action_noise.png" alt="Action Noise" width="300" style="margin:6px 0 0 0;"></center>
 
 Over all, the proportional controller, SAC, and residual SAC are robust against the action noise till $\sigma \ge 0.05 \text{ m}$, suggesting that these policies can correct the error under random noise in action up to this level.
 Interestingly, SAC has the higher success score than proportional controller and residual SAC at $\sigma = 0.1 \text{ m}$, suggesting that the probablistic nature of policy might provide additional robustness, in contrast to the proportional controller and the residual SAC where a large part of action is proposed by the proportional controller.  
@@ -154,7 +155,7 @@ Interestingly, SAC has the higher success score than proportional controller and
 <div style="background: #eeeff0; border:1px solid #a9aaac; border-radius:0px; padding:2px 16px; font-family:monospace;white-space:pre-wrap;line-height:1.0;">
 
 $\bar {a}_t = f* a_t$, where $\bar {a}_t$ is the scaled action $a_t$ is the action proposed by the policy while $f \in (0,1]$ is the scaling factor </div>
-<center><img src="./results/metrics/robustness/action_scale.png" alt="Action Noise" width="300" style="margin:6px 0 0 0;"></center>
+<center><img src="./results/plots/robustness/action_scale.png" alt="Action Noise" width="300" style="margin:6px 0 0 0;"></center>
 
 Over all, the proportional controller, SAC, and residual SAC are robust against the action scale, suggesting that it is the direction of the action that is essential to achieve the goal, not the scale. This is consistent with the finding that the proportional controller can achieve high success rate even with Kp $= 5$.
 
@@ -174,7 +175,7 @@ This project was developed with Python 3.12 and uses Gymnasium-Robotics, MuJoCo,
 Clone the repository:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/robot-reaching-residual-rl.git
+git clone https://github.com/yuanchimarkyang-lab/robot-reaching-residual-rl.git
 cd robot-reaching-residual-rl
 ```
 
