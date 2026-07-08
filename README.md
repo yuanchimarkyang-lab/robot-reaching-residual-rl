@@ -135,6 +135,7 @@ For action level, we apply a scaling factor to the action to evaluate if the pol
 
 $\tilde {s}_t = s_t + \epsilon_t$, where $\tilde {s}_t$ is the noisy observation, $s_t$ is the true observation (state), and $\epsilon_t$ is noise. </div>
 <center><img src="./results/plots/robustness/observation_noise.png" alt="Observation Noise" width="300" style="margin:6px 0 0 0;"></center>
+
 ![Observation Noise](./results/plots/robustness/observation_noise.png)
 
 First of all, with an observation noise higher than success threshold ($\sigma \ge 0.005 \text{ m}$), the success rates for all policies drop drastically, indicating that achieving accurate control requires low noise level.
