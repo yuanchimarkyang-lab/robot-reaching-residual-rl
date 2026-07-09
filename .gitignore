@@ -31,8 +31,14 @@ results/videos/
 *.gif
 
 # Optional: keep plots and CSVs, but ignore raw huge files
-results/metrics/
-results/plots/
+#results/metrics/
+#results/plots/
+results/analysis_working
+*.npy
+#*.ipynb
 
 # MuJoCo / temporary
 *.tmp
+
+# Those that no longer in use
+obselete/
