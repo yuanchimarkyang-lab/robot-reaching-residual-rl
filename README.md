@@ -245,7 +245,7 @@ In this project, I used $\alpha = 0.3$ and trained the residual SAC model using 
 | success critetia | $\|d\| < 0.005\ \text{m} = 5$, or 5 mm |
 | reward | $-\sum_{i=1}^N r_i$, where the dense reward is based on distance to the target. The default $r_i = d_i^2$ |
 
-where $d = \text{achieved\_goal} - \text{desired\_goal}$
+where $d = $ achieved\_goal $-$ desired\_goal
 
 The success criteria is 10 times stricker than the default 0.05 m threshold. 
 This stricker criteria was chosen to evaluate fine-grained reaching accuracy. 
