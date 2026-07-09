@@ -332,7 +332,9 @@ Action scaling tests whether the policy remains effective when the commanded act
 <div style="background: #eeeff0; border:1px solid #a9aaac; border-radius:0px; padding:2px 16px; font-family:monospace;white-space:pre-wrap;line-height:1.0;">
 
 $\tilde {s}_t = s_t + \epsilon_t$ </div>
+
 where $\tilde {s}_t$ is the noisy observation, $s_t$ is the true observation (state), and $\epsilon_t$ is Gaussian noise.
+
 <center><img src="./results/plots/robustness/observation_noise.png" alt="Observation Noise" width="300" style="margin:6px 0 0 0;"></center>
 
 <!--
@@ -350,7 +352,9 @@ In contrast, the simplicity of proportional controller may make it less sensitiv
 <div style="background: #eeeff0; border:1px solid #a9aaac; border-radius:0px; padding:2px 16px; font-family:monospace;white-space:pre-wrap;line-height:1.0;">
 
 $\tilde {a}_t = a_t + \epsilon_t$</div>
+
 where $\tilde {a}_t$ is the noisy action, $a_t$ is the action proposed by the policy, and $\epsilon_t$ is Gaussian noise in action-command space.
+
 <center><img src="./results/plots/robustness/action_noise.png" alt="Action Noise" width="300" style="margin:6px 0 0 0;"></center>
 
 Over all, the proportional controller, SAC, and residual SAC remain robust to moderate action noise. 
@@ -364,7 +368,9 @@ In contrast, the proportional controller and the residual SAC reply more heavily
 <div style="background: #eeeff0; border:1px solid #a9aaac; border-radius:0px; padding:2px 16px; font-family:monospace;white-space:pre-wrap;line-height:1.0;">
 
 $\bar {a}_t = f* a_t$</div>
+
 where $\bar {a}_t$ is the scaled action, $a_t$ is the action proposed by the policy, and $f \in (0,1]$ is the scaling factor. 
+
 <center><img src="./results/plots/robustness/action_scale.png" alt="Action Scale" width="300" style="margin:6px 0 0 0;"></center>
 
 Over all, the proportional controller, SAC, and residual SAC are robust to action scale. 
