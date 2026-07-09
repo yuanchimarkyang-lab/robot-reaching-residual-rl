@@ -146,6 +146,7 @@ robot-reaching-residual-rl/
 │   ├── evaluate_robustness.py
 │
 ├── results/
+│   ├── analysis/
 │   ├── metrics/
 │   └── plots/
 │
@@ -163,13 +164,14 @@ robot-reaching-residual-rl/
 | Directory / File   | Description                                                                                                       |
 | ------------------ | ----------------------------------------------------------------------------------------------------------------- |
 | `configs/`         | YAML configuration files for environment setup, controllers, RL training, residual RL, and robustness experiments |
-| `src/`             | Source code for controllers, wrappers, training scripts, evaluation scripts, and plotting utilities               |
-| `results/metrics/` | Evaluation results saved as CSV files                                                                             |
-| `results/plots/`   | Figures used in the README and analysis                                                                           |
-| `models/`          | Trained SAC and residual SAC models; usually excluded from Git tracking if model files are large                  |
-| `README.md`        | Project description, methodology, results, discussion, and usage guide                                            |
-| `requirements.txt` | Python package dependencies                                                                                       |
-| `.gitignore`       | Files and folders excluded from Git tracking                                                                      |
+| `src/`             | Source code for controllers, wrappers, training scripts, and evaluation scripts|
+| `results/analysis/`| Jupyter notebook for analysis and plotting |
+| `results/metrics/` | Evaluation results saved as CSV files |
+| `results/plots/`   | Figures used in the README and analysis |
+| `models/`          | Trained SAC and residual SAC models; usually excluded from Git tracking if model files are large|
+| `README.md`        | Project description, methodology, results, discussion, and usage guide|
+| `requirements.txt` | Python package dependencies |
+| `.gitignore`       | Files and folders excluded from Git tracking |
 
 
 ## Method
@@ -243,11 +245,7 @@ In this project, I used $\alpha = 0.3$ and trained the residual SAC model using 
 | success critetia | $\|d\| < 0.005\ \text{m} = 5$, or 5 mm |
 | reward | $-\sum_{i=1}^N r_i$, where the dense reward is based on distance to the target. The default $r_i = d_i^2$ |
 
-where:
-
-$$
-d = \text{achieved\_goal} - \text{desired\_goal}
-$$
+where $d = \text{achieved\_goal} - \text{desired\_goal}$
 
 The success criteria is 10 times stricker than the default 0.05 m threshold. 
 This stricker criteria was chosen to evaluate fine-grained reaching accuracy. 
