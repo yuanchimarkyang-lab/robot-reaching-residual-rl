@@ -1,3 +1,13 @@
+"""
+Definition for Wrappers that interact with the environment differently.
+
+This scripts define
+- ResidualActionWrapper: the wrapper for residual_sac as a correction to proportional controller
+- ObservationNoiseWrapper: the wrapper to add observation noise.
+- PhysicalActionPerturbationWrapper: the wrapper to add action noise and action scale
+- CustomThresholdWrapper: the wrapper to modify the threshold to 0.005 on eval during SAC and residual SAC training.
+"""
+
 import gymnasium as gym
 import numpy as np
 

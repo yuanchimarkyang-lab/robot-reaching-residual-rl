@@ -1,3 +1,10 @@
+"""
+Experiments on Proportional Controller.
+
+This script run evaluation experiments on proportional controller with Kp defined as in the configs/baseline.yaml file
+
+"""
+
 import gymnasium as gym
 import gymnasium_robotics
 import pandas as pd
@@ -10,6 +17,11 @@ from controllers import proportional_controller
 
 
 def run_one_episode(env, kp, seed=None, record_video = False, success_threshold=0.05):
+    """
+    This function runs one experiment on a given kp, with an option to supply seed for reproduceability and record video. 
+    The experiment results, including metrics, frames for video, actions, and achieved_goals, are returned.
+
+    """
     obs, info = env.reset(seed=seed)
 
     frames = []
@@ -66,6 +78,9 @@ def main():
     num_episodes = baseline_config["num_eval_episodes"]
     success_threshold = baseline_config["success_threshold"]
     base_seed = env_config["seed"]
+    
+    output_path = Path("results/metrics/baseline/proportional_controller_metrics.csv")
+    output_path.parent.mkdir(parents=True, exist_ok=True)
 
     all_metrics = []
 
@@ -73,12 +88,12 @@ def main():
         print(f"\nEvaluating proportional controller with kp={kp}")
         
         for episode_idx in tqdm(range(num_episodes)):
-            record_video = (baseline_config["record_video"] and (episode_idx==0 or episode_idx==1 or episode_idx==14))
+            record_video = (baseline_config["record_video"] and (episode_idx in {0,1,14}))
 
             metrics, frames, actions, achieved_goals = run_one_episode(
                 env=env,
                 kp=kp,
-                seed=base_seed + episode_idx,
+                seed=base_seed + episode_idx, # the same seeds are used to enhance reproducebility
                 record_video=record_video,
                 success_threshold=success_threshold
             )
@@ -98,17 +113,16 @@ def main():
                     f"results/videos/proportional_kp_{kp}_episode_{episode_label}.mp4",
                     fps=3,
                 )
-                actions = np.array(actions)
-                np.save(f"results/metrics/actions_proportional_kp_{kp}_episode_{episode_label}.npy", actions)
-                achieved_goals = np.array(achieved_goals)
-                np.save(f"results/metrics/achieved_goals_proportional_kp_{kp}_episode_{episode_label}.npy", achieved_goals)
-
+            
+            # actions and achieved goals are stored for error analysis
+            actions = np.array(actions)
+            np.save(f"results/metrics/baseline/actions_proportional_kp_{kp}_episode_{episode_label}.npy", actions)
+            achieved_goals = np.array(achieved_goals)
+            np.save(f"results/metrics/baseline/achieved_goals_proportional_kp_{kp}_episode_{episode_label}.npy", achieved_goals)
     env.close()
 
     df = pd.DataFrame(all_metrics)
 
-    output_path = Path("results/metrics/proportional_controller_metrics.csv")
-    output_path.parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(output_path, index=False)
 
     print("\nProportional controller evaluation complete.")

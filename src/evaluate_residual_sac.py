@@ -1,3 +1,9 @@
+"""
+Experiments on residual SAC.
+
+This script evaluate the performance of trained residual SAC model with evaluation setup and mode path defined in the configs/residual_sac.yaml file.
+
+"""
 from pathlib import Path
 
 import numpy as np
@@ -19,6 +25,11 @@ def run_one_episode(
     record_video=False,
     success_threshold=0.05,
 ):
+    """
+    This function runs one experiment on a given model, with an option to supply seed for reproduceability and record video. 
+    The experiment results, including metrics, frames for video, residual_actions, baseline_actions, final_actions and achieved_goals, are returned.
+
+    """
     obs, info = env.reset(seed=seed)
 
     frames = []
@@ -112,7 +123,7 @@ def main():
         metrics, frames, residual_actions, baseline_actions, final_actions, achieved_goals = run_one_episode(
             env=env,
             model=model,
-            seed=base_seed + episode_idx,
+            seed=base_seed + episode_idx,# the same seeds are used to enhance reproducebility
             record_video=record_video,
             success_threshold=success_threshold,
         )
@@ -135,10 +146,11 @@ def main():
                 f"results/videos/residual_sac/{model_label}/residual_sac_policy_alpha_{alpha}_episode_{episode_label}.mp4",
                 fps=30,
             )
-            np.save(f"results/metrics/residual_sac/{model_label}/residual_actions_alpha_{alpha}_episode_{episode_label}.npy", residual_actions)
-            np.save(f"results/metrics/residual_sac/{model_label}/baseline_actions_alpha_{alpha}_episode_{episode_label}.npy", baseline_actions)
-            np.save(f"results/metrics/residual_sac/{model_label}/final_actions_alpha_{alpha}_episode_{episode_label}.npy", final_actions)
-            np.save(f"results/metrics/residual_sac/{model_label}/achieved_goals_alpha_{alpha}_episode_{episode_label}.npy", achieved_goals)
+        # residual_actions, baseline_actions, final_actions, and achieved goals are stored for error analysis
+        np.save(f"results/metrics/residual_sac/{model_label}/residual_actions_alpha_{alpha}_episode_{episode_label}.npy", residual_actions)
+        np.save(f"results/metrics/residual_sac/{model_label}/baseline_actions_alpha_{alpha}_episode_{episode_label}.npy", baseline_actions)
+        np.save(f"results/metrics/residual_sac/{model_label}/final_actions_alpha_{alpha}_episode_{episode_label}.npy", final_actions)
+        np.save(f"results/metrics/residual_sac/{model_label}/achieved_goals_alpha_{alpha}_episode_{episode_label}.npy", achieved_goals)
 
     env.close()
 

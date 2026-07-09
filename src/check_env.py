@@ -1,3 +1,10 @@
+"""
+Verification of environment setup
+
+This script make sure that the required packages are installed properly. It tested if the environment can be loaded and the action can be properly applied in the simulation. 
+"""
+
+
 import gymnasium as gym
 import gymnasium_robotics
 

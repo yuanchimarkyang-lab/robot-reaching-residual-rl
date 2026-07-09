@@ -1,3 +1,9 @@
+"""
+The experiment of random rollout.
+
+This script runs the random rollout as sanity check. The random rollout is deinfed as actions sampled randomly at the action_space at the given environment.
+
+"""
 import gymnasium as gym
 import gymnasium_robotics
 import numpy as np
@@ -9,6 +15,11 @@ from config import load_config
 
 
 def run_one_episode(env, seed=None, record_video = False):
+    """
+    This function runs one experiment on random rollout, with an option to supply seed for reproduceability and record video. 
+    The experiment results, including metrics and frames for video are returned.
+
+    """
     obs, info = env.reset(seed=seed)
 
     frames = []

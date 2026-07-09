@@ -1,3 +1,9 @@
+"""
+Experiments on SAC.
+
+This script evaluate the performance of trained SAC model with evaluation setup and mode path defined in the configs/sac.yaml file.
+
+"""
 from pathlib import Path
 
 import pandas as pd
@@ -17,6 +23,11 @@ def run_one_episode(
     record_video=False,
     success_threshold=0.05,
 ):
+    """
+    This function runs one experiment on a model, with an option to supply seed for reproduceability and record video. 
+    The experiment results, including metrics, frames for video, actions, and achieved_goals, are returned.
+
+    """
     obs, info = env.reset(seed=seed)
 
     frames = []
@@ -87,12 +98,12 @@ def main():
     all_metrics = []
 
     for episode_idx in tqdm(range(num_episodes)):
-        record_video = (episode_idx == 0 or episode_idx == 1 or episode_idx ==14)
+        record_video = (episode_idx in {0, 1, 14})
 
         metrics, frames, actions, achieved_goals = run_one_episode(
             env=env,
             model=model,
-            seed=base_seed + episode_idx,
+            seed=base_seed + episode_idx,# the same seeds are used to enhance reproducebility
             record_video=record_video,
             success_threshold=success_threshold,
         )
@@ -114,10 +125,12 @@ def main():
                 f"results/videos/sac/{model_label}/sac_policy_episode_{episode_label}.mp4",
                 fps=3,
             )
-            actions = np.array(actions)
-            np.save(f"results/metrics/sac/{model_label}/actions_sac_policy_episode_{episode_label}.npy",actions)
-            achieved_goals = np.array(achieved_goals)
-            np.save(f"results/metrics/sac/{model_label}/achieved_goals_sac_policy_episode_{episode_label}.npy", achieved_goals)
+        
+        # actions and achieved goals are stored for error analysis
+        actions = np.array(actions)
+        np.save(f"results/metrics/sac/{model_label}/actions_sac_policy_episode_{episode_label}.npy",actions)
+        achieved_goals = np.array(achieved_goals)
+        np.save(f"results/metrics/sac/{model_label}/achieved_goals_sac_policy_episode_{episode_label}.npy", achieved_goals)
 
     env.close()
 

@@ -1,3 +1,10 @@
+"""
+Evaluate the robustness of each policy.
+
+The random rollout, the proportional control, the SAC model, and the residual_SAC model are evaluated against observation noise, action noise, and action scale. The results are stored in results/metrics/robustness/robustness_summary.csv
+
+"""
+
 from pathlib import Path
 
 import numpy as np
@@ -141,6 +148,11 @@ def run_one_episode(
     record_video=False,
     success_threshold=0.05,
 ):
+    """
+    This function runs one evaluation experiment on given policy (defined as policy_nam), with an option to supply seed for reproduceability and record video. 
+    The experiment results, including metrics, frames for video, actions, and achieved_goals, are returned.
+
+    """
     obs, info = env.reset(seed=seed)
 
     frames = []
@@ -181,8 +193,10 @@ def run_one_episode(
         distances.append(goal_distance(true_obs))
         achieved_goals.append(true_obs["achieved_goal"])
         rewards.append(reward)
-
+        
+        # the true action during evaluation of noisy action
         physical_action = get_wrapper_attr(env, "last_physical_action")
+        # the true action for residual SAC
         final_action = get_wrapper_attr(env, "last_final_action")
 
         if physical_action is not None:
@@ -242,7 +256,7 @@ def evaluate_setting(
             policy_name=policy_name,
             model=model,
             best_kp=best_kp,
-            seed=base_seed + episode_idx,
+            seed=base_seed + episode_idx, # keep the same seed for reproducebility
             record_video=should_record,
             success_threshold=success_threshold,
         )
@@ -264,6 +278,8 @@ def evaluate_setting(
                 f"results/videos/robustness_{video_tag}_{policy_name}.mp4",
                 fps=30,
             )
+
+        # actions and achieved_goals are stored for error analysis.
         np.save("results/metrics/robustness/actions_{video_tag}_{policy_name}_episodes_{episodes_label}.npy", actions)
         np.save("results/metrics/robustness/achieved_goals_{video_tag}_{policy_name}_episodes_{episodes_label}.npy", achieved_goals)
 
@@ -307,6 +323,7 @@ def main():
 
     all_results = []
 
+    # Setting up the conditions for each experiment
     experiments = []
 
     for sigma in robustness_config["observation_noise_levels"]:
@@ -341,7 +358,8 @@ def main():
                 "action_scale": scale,
             }
         )
-
+    
+    # run each experiment
     for exp in experiments:
         print(
             f"\nExperiment={exp['experiment']}, "
@@ -350,7 +368,7 @@ def main():
             f"action_noise={exp['action_noise_sigma']}, "
             f"action_scale={exp['action_scale']}"
         )
-
+        # for each policy
         for policy_name in policies:
             print(f"  Evaluating policy: {policy_name}")
 

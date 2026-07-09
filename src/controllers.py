@@ -1,3 +1,10 @@
+"""
+The implementation of the proportional controller.
+
+This script defines the proportional control that apply action in the direction of the displacement, with magnitude controller kp
+"""
+
+
 import numpy as np
 
 def proportional_controller(obs, kp=5.0):

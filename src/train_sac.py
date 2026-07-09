@@ -1,3 +1,10 @@
+"""
+Training SAC
+
+This script train SAC model with set-up given by configs/sac.yaml
+
+"""
+
 from pathlib import Path
 
 from stable_baselines3 import SAC
@@ -28,7 +35,7 @@ def main():
     train_env = Monitor(train_env)
 
     eval_env = make_fetch_env(env_id, render_mode=None)
-    eval_env = CustomThresholdWrapper(eval_env)
+    eval_env = CustomThresholdWrapper(eval_env) # the success threshold is modified to 0.005
     eval_env = Monitor(eval_env)
 
     eval_callback = EvalCallback(

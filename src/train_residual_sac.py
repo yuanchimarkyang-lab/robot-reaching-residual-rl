@@ -1,3 +1,9 @@
+"""
+Training residual SAC
+
+This script train residual SAC model with set-up given by configs/residual_sac.yaml
+
+"""
 from pathlib import Path
 
 from stable_baselines3 import SAC
@@ -11,6 +17,9 @@ from wrappers import ResidualActionWrapper, CustomThresholdWrapper
 from datetime import datetime, timezone, timedelta
 
 def make_residual_env(env_id,kp,alpha):
+    """
+    This function make the residual environment from the wrappers
+    """
     env = make_fetch_env(env_id, render_mode=None)
     env = ResidualActionWrapper(env, kp=kp, alpha=alpha)
     env = Monitor(env)
@@ -37,7 +46,7 @@ def main():
 
     train_env = make_residual_env(env_id, kp=best_kp, alpha = alpha)
     eval_env = make_residual_env(env_id, kp=best_kp, alpha = alpha)
-    eval_env = CustomThresholdWrapper(eval_env)
+    eval_env = CustomThresholdWrapper(eval_env) # modify the success threshold as 0.005
 
     eval_callback = EvalCallback(
             eval_env,

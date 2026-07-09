@@ -1,3 +1,10 @@
+"""
+The utility function to create a fetch environment.
+
+This script define make_fetch_env, an utility function to create a Gymnasium-Robotics Fetch environment.
+
+"""
+
 import gymnasium as gym
 import gymnasium_robotics
 

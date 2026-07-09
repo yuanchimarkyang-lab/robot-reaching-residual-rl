@@ -1,3 +1,14 @@
+"""
+Utility Function Definition
+
+This script define three utility function
+- goal_distance: it calculate the end effector's current distance to the target
+- save_video: it saves the frame as videos.
+- summarize_episode: it calculate the summary statistics according to the experiment results.
+
+"""
+
+
 import numpy as np
 import imageio
 from pathlib import Path
@@ -23,7 +34,7 @@ def save_video(frames, output_path, fps=30):
     print(f"Saved video to {output_path}")
 
 
-def summarize_episode(distances, rewards, actions, success_threshold = 0.05):
+def summarize_episode(distances, rewards, actions, success_threshold = 0.005):
     """
     Objective: compute simple episode-level metrics.
     """

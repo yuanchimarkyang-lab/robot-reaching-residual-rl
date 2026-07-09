@@ -1,3 +1,11 @@
+"""
+Load the configuration files (in configs/)
+
+This script defines a function to load the configurations defined in the configuration files.
+
+"""
+
+
 from pathlib import Path
 import yaml
 
