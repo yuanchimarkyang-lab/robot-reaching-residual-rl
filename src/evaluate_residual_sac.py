@@ -144,7 +144,7 @@ def main():
             save_video(
                 frames,
                 f"results/videos/residual_sac/{model_label}/residual_sac_policy_alpha_{alpha}_episode_{episode_label}.mp4",
-                fps=30,
+                fps=3,
             )
         # residual_actions, baseline_actions, final_actions, and achieved goals are stored for error analysis
         np.save(f"results/metrics/residual_sac/{model_label}/residual_actions_alpha_{alpha}_episode_{episode_label}.npy", residual_actions)

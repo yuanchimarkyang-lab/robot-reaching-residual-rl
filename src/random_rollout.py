@@ -83,7 +83,7 @@ def main():
             save_video(
                 frames,
                 "results/videos/random_policy_episode_000.mp4",
-                fps=30,
+                fps=3,
             )
 
     env.close()
