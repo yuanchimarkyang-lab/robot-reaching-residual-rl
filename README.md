@@ -1,4 +1,4 @@
-# FetchReach Mini-Project: Control, Reinforcement Learning, and Failure Analysis
+# Robot Learning on Gymnasium-Robotics — Reinforcement Learning
 
 ## Project Overview
 Accurate and robust control remains challenging when observations are noisy, actions are imperfect, or the physical system does not respond exactly as commanded.
